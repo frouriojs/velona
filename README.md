@@ -107,7 +107,7 @@ import { depend } from 'velona'
 
 type FS = {
   readFile(path: string, option: 'utf8'): Promise<string>
-  writeFile(path: string, data: string, option: 'utf8'): Promise<void>
+  writeFile(path: string, text: string, option: 'utf8'): Promise<void>
 }
 
 export const basicFn = depend(async (dependencies, path: string, text: string) => {
@@ -128,17 +128,17 @@ console.log(text) // 'Hello world!'
 ```ts
 import { basicFn } from './'
 
-let tmp = ''
+const data: Record<string, string> = {}
 const injectedFn = basicFn.inject({
-  readFile: () => Promise.resolve(tmp),
-  writeFile: (_, text) => {
-    tmp = text
+  readFile: path => Promise.resolve(data[path]),
+  writeFile: (path, text) => {
+    data[path] = text
     return Promise.resolve()
   }
 })
 
-const data = 'Hello world!'
-await expect(injectedFn('test.txt', data)).resolves.toBe(data)
+const text = 'Hello world!'
+await expect(injectedFn('test.txt', text)).resolves.toBe(text)
 ```
 
 ## License

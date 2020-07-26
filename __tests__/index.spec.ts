@@ -14,7 +14,7 @@ test('inject add', () => {
 
 type FS = {
   readFile(path: string, option: 'utf8'): Promise<string>
-  writeFile(path: string, data: string, option: 'utf8'): Promise<void>
+  writeFile(path: string, text: string, option: 'utf8'): Promise<void>
 }
 
 test('inject fs', async () => {
@@ -23,15 +23,15 @@ test('inject fs', async () => {
     return dependencies.readFile(path, 'utf8')
   }, fs.promises as FS)
 
-  let tmp = ''
+  const data: Record<string, string> = {}
   const injectedFn = basicFn.inject({
-    readFile: () => Promise.resolve(tmp),
-    writeFile: (_, text) => {
-      tmp = text
+    readFile: path => Promise.resolve(data[path]),
+    writeFile: (path, text) => {
+      data[path] = text
       return Promise.resolve()
     }
   })
 
-  const data = 'Hello world!'
-  await expect(injectedFn('test.txt', data)).resolves.toBe(data)
+  const text = 'Hello world!'
+  await expect(injectedFn('test.txt', text)).resolves.toBe(text)
 })
