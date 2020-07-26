@@ -1,7 +1,7 @@
 {
   "name": "velona",
   "version": "0.1.0",
-  "description": "TypeScript OSS template",
+  "description": "TypeScript DI helper for functional programming",
   "author": "Solufa <solufa2020@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -28,7 +28,8 @@
     "dist"
   ],
   "keywords": [
-    "typescript"
+    "typescript",
+    "DI"
   ],
   "eslintConfig": {
     "env": {

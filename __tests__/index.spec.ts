@@ -4,15 +4,12 @@ import { depend } from '../src'
 test('inject add', () => {
   const add = (a: number, b: number) => a + b
 
-  const timesAfterAdd = depend(
-    (injectedAdd, a: number, b: number, c: number) => injectedAdd(a, b) * c,
-    add
-  )
+  const basicFn = depend((dependency, a: number, b: number, c: number) => dependency(a, b) * c, add)
 
-  const injectedFn = timesAfterAdd.inject(() => 4)
+  const injectedFn = basicFn.inject((a, b) => a * b)
 
-  expect(injectedFn(1, 2, 3)).toBe(12)
-  expect(timesAfterAdd(1, 2, 3)).toBe(9)
+  expect(injectedFn(2, 3, 4)).toBe(24)
+  expect(basicFn(2, 3, 4)).toBe(20)
 })
 
 type FS = {
@@ -21,20 +18,20 @@ type FS = {
 }
 
 test('inject fs', async () => {
-  const readAfterWrite = depend(async (injectedFS, path: string, text: string) => {
-    await injectedFS.writeFile(path, text, 'utf8')
-    return injectedFS.readFile(path, 'utf8')
+  const basicFn = depend(async (dependencies, path: string, text: string) => {
+    await dependencies.writeFile(path, text, 'utf8')
+    return dependencies.readFile(path, 'utf8')
   }, fs.promises as FS)
 
   let tmp = ''
-  const injectedFn = readAfterWrite.inject({
+  const injectedFn = basicFn.inject({
     readFile: () => Promise.resolve(tmp),
-    writeFile: (_: string, text: string) => {
+    writeFile: (_, text) => {
       tmp = text
       return Promise.resolve()
     }
   })
 
-  const data = 'abc'
-  await expect(injectedFn('', data)).resolves.toBe(data)
+  const data = 'Hello world!'
+  await expect(injectedFn('test.txt', data)).resolves.toBe(data)
 })
