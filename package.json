@@ -4,6 +4,7 @@
   "description": "TypeScript DI helper for functional programming",
   "author": "Solufa <solufa2020@gmail.com>",
   "license": "MIT",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npm run rimraf && tsc",
     "rimraf": "node -e \"require('fs').rmdirSync('dist', { recursive: true })\"",
