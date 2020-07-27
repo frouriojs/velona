@@ -10,7 +10,7 @@ test('inject add', () => {
   expect(basicFn(2, 3, 4)).toBe(20)
 })
 
-test('DOM API mocking', () => {
+test('Browser API mocking', () => {
   const handler = depend(
     { print: (text: string) => alert(text) },
     ({ print }, e: Pick<MouseEvent, 'type' | 'x' | 'y'>) =>
@@ -27,11 +27,13 @@ test('DOM API mocking', () => {
 test('integration', () => {
   const add = (a: number, b: number) => a + b
   const basicFn = depend(add, (dependency, a: number, b: number, c: number) => dependency(a, b) * c)
-  const deps = { add, basicFn, square: (n: number) => n ** 2 }
-  const nestedFn = depend(deps, ({ add, basicFn, square }, a: number, b: number, c: number) =>
-    square(basicFn.inject(add)(a, b, c))
+  const nestedFn = depend(
+    { add, basicFn, square: (n: number) => n ** 2 },
+    ({ add, basicFn, square }, a: number, b: number, c: number) =>
+      square(basicFn.inject(add)(a, b, c))
   )
-  const injectedFn = nestedFn.inject({ ...deps, add: (a, b) => a * b })
+
+  const injectedFn = nestedFn.inject({ ...nestedFn.deps, add: (a, b) => a * b })
 
   expect(nestedFn(2, 3, 4)).toBe(20 ** 2)
   expect(injectedFn(2, 3, 4)).toBe(24 ** 2)
