@@ -1,8 +1,8 @@
 export const depend = <T, U extends [] | [any, ...any[]], V>(
-  cb: (deps: T, ...params: U) => V,
-  deps: T
+  dependencies: T,
+  cb: (deps: T, ...params: U) => V
 ) => {
-  const fn = (...args: U) => cb(deps, ...args)
-  fn.inject = (d: T) => (...args: U) => cb(d, ...args)
+  const fn = (...args: U) => cb(dependencies, ...args)
+  fn.inject = (deps: T) => (...args: U) => cb(deps, ...args)
   return fn
 }
