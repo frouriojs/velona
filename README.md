@@ -31,8 +31,8 @@ import { depend } from 'velona'
 const add = (a: number, b: number) => a + b
 
 export const basicFn = depend(
-  add,
-  (dependency, a: number, b: number, c: number) => dependency(a, b) * c
+  { add },
+  ({ add }, a: number, b: number, c: number) => add(a, b) * c
 )
 ```
 
@@ -47,16 +47,15 @@ console.log(basicFn(2, 3, 4)) // 20
 ```ts
 import { basicFn } from './'
 
-const injectedFn = basicFn.inject((a, b) => a * b)
+const injectedFn = basicFn.inject({ add: (a, b) => a * b })
 
-expect(injectedFn(2, 3, 4)).toBe(24) // pass
-expect(basicFn(2, 3, 4)).toBe(20) // pass
+expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
+expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
 ```
 
 ## DI to browser API callback
 
 `handler.ts`
-
 ```ts
 import { depend } from 'velona'
 
@@ -67,7 +66,6 @@ export const handler = depend(
 ```
 
 `index.ts`
-
 ```ts
 import { handler } from './handler'
 
@@ -76,7 +74,6 @@ document.body.click() // alert('type: click, x: 0, y: 0')
 ```
 
 `index.spec.ts`
-
 ```ts
 import { handler } from './handler'
 
@@ -111,8 +108,8 @@ import { depend } from 'velona'
 import { add } from './add'
 
 export const basicFn = depend(
-  add,
-  (dependency, a: number, b: number, c: number) => dependency(a, b) * c
+  { add },
+  ({ add }, a: number, b: number, c: number) => add(a, b) * c
 )
 ```
 
@@ -130,11 +127,11 @@ console.log(noDIFn(2, 3, 4)) // 20
 import { basicFn } from './'
 import { noDIFn } from './noDI'
 
-const injectedFn = basicFn.inject((a, b) => a * b)
+const injectedFn = basicFn.inject({ add: (a, b) => a * b })
 
-expect(injectedFn(2, 3, 4)).toBe(24) // pass
-expect(basicFn(2, 3, 4)).toBe(20) // pass
-expect(noDIFn(2, 3, 4)).toBe(20) // pass
+expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
+expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
+expect(noDIFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
 ```
 
 ## Usage with fs
@@ -185,49 +182,70 @@ await expect(injectedFn('test.txt', text)).resolves.toBe(text)
 
 ## Integration test
 
-`add.ts`
+Always call "inject" method with no arguments when passing a function wrapped in velona to depend.
 
+`add.ts`
 ```ts
 export const add = (a: number, b: number) => a + b
 ```
 
-`basicFn.ts`
-
+`grandchild.ts`
 ```ts
 import { depend } from 'velona'
 import { add } from './add'
 
-export const basicFn = depend(
-  add,
-  (dependency, a: number, b: number, c: number) => dependency(a, b) * c
+export const grandchild = depend(
+  { add },
+  ({ add }, a: number, b: number) => add(a, b)
 )
 ```
 
-`nestedFn.ts`
-
+`child.ts`
 ```ts
 import { depend } from 'velona'
-import { add } from './add'
-import { basicFn } from './basicFn'
+import { grandchild } from './grandchild'
 
-export const nestedFn = depend(
-  { add, basicFn, square: (n: number) => n ** 2 },
-  ({ add, basicFn, square }, a: number, b: number, c: number) => {
-    const injectedBasicFn = basicFn.inject(add)
-    return square(injectedBasicFn(a, b, c))
-  }
+export const child = depend(
+  { grandchild: grandchild.inject() }, // call "inject" method with no arguments
+  ({ grandchild }, a: number, b: number, c: number) => grandchild(a, b) * c
 )
 ```
 
-`nestedFn.spec.ts`
-
+`parentFn.ts`
 ```ts
-import { nestedFn } from './nestedFn'
+import { depend } from 'velona'
+import { child } from './child'
 
-const injectedFn = nestedFn.inject({ ...nestedFn.deps, add: (a, b) => a * b })
+export const parentFn = depend(
+  {
+    child: child.inject(), // call "inject" method with no arguments
+    print: (data: number) => alert(data)
+  },
+  ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
+)
+```
 
-expect(nestedFn(2, 3, 4)).toBe(20 ** 2) // pass
-expect(injectedFn(2, 3, 4)).toBe(24 ** 2) // pass
+`index.ts`
+```ts
+import { parentFn } from './parentFn'
+
+parentFn(2, 3, 4) // alert(20)
+```
+
+`parentFn.spec.ts`
+```ts
+import { parentFn } from './parentFn'
+
+const injectedFn = parentFn.inject({
+  child: child.inject({
+    grandchild: grandchild.inject({
+      add: (a, b) => a * b
+    })
+  }),
+  print: data => data
+})
+
+expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
 ```
 
 ## License
