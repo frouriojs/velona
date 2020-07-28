@@ -36,9 +36,6 @@ test('integration', () => {
     ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
   )
 
-  const printInjected = parentFn.inject({ print: data => data })
-  expect(printInjected(2, 3, 4)).toBe((2 + 3) * 4)
-
   const childInjected = parentFn.inject({
     child: child.inject({ grandchild: grandchild.inject({ add: (a, b) => a * b }) }),
     print: data => data
