@@ -28,11 +28,11 @@ test('integration', () => {
   const add = (a: number, b: number) => a + b
   const grandchild = depend({ add }, ({ add }, a: number, b: number) => add(a, b))
   const child = depend(
-    { grandchild: grandchild.inject() },
+    { grandchild },
     ({ grandchild }, a: number, b: number, c: number) => grandchild(a, b) * c
   )
   const parentFn = depend(
-    { child: child.inject(), print: (data: number) => alert(data) },
+    { child, print: (data: number) => alert(data) },
     ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
   )
 

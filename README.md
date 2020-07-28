@@ -182,8 +182,6 @@ await expect(injectedFn('test.txt', text)).resolves.toBe(text)
 
 ## Integration test
 
-Always call "inject" method with no arguments when passing a function wrapped in velona to depend.
-
 `add.ts`
 ```ts
 export const add = (a: number, b: number) => a + b
@@ -206,7 +204,7 @@ import { depend } from 'velona'
 import { grandchild } from './grandchild'
 
 export const child = depend(
-  { grandchild: grandchild.inject() }, // call "inject" method with no arguments
+  { grandchild },
   ({ grandchild }, a: number, b: number, c: number) => grandchild(a, b) * c
 )
 ```
@@ -217,10 +215,7 @@ import { depend } from 'velona'
 import { child } from './child'
 
 export const parentFn = depend(
-  {
-    child: child.inject(), // call "inject" method with no arguments
-    print: (data: number) => alert(data)
-  },
+  { child, print: (data: number) => alert(data) },
   ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
 )
 ```
