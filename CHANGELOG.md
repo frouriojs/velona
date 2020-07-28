@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/frouriojs/velona/compare/v0.2.0...v0.3.0) (2020-07-28)
+
+
+### Features
+
+* set default deps when call 'inject' ([edfb3b0](https://github.com/frouriojs/velona/commit/edfb3b04f1700e34832c0b8d5fd643bc7d456c6e))
+
+
+### Documentation
+
+* update README ([bbd97a4](https://github.com/frouriojs/velona/commit/bbd97a49ad7bf13272de1aa24ed020a1114e8f74))
+
 ## [0.2.0](https://github.com/frouriojs/velona/compare/v0.1.0...v0.2.0) (2020-07-27)
 
 
