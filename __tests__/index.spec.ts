@@ -3,11 +3,11 @@ import { depend } from '../src'
 
 test('inject add', () => {
   const add = (a: number, b: number) => a + b
-  const basicFn = depend(add, (dependency, a: number, b: number, c: number) => dependency(a, b) * c)
-  const injectedFn = basicFn.inject((a, b) => a * b)
+  const basicFn = depend({ add }, ({ add }, a: number, b: number, c: number) => add(a, b) * c)
+  const injectedFn = basicFn.inject({ add: (a, b) => a * b })
 
-  expect(injectedFn(2, 3, 4)).toBe(24)
-  expect(basicFn(2, 3, 4)).toBe(20)
+  expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4)
+  expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4)
 })
 
 test('Browser API mocking', () => {
@@ -26,17 +26,24 @@ test('Browser API mocking', () => {
 
 test('integration', () => {
   const add = (a: number, b: number) => a + b
-  const basicFn = depend(add, (dependency, a: number, b: number, c: number) => dependency(a, b) * c)
-  const nestedFn = depend(
-    { add, basicFn, square: (n: number) => n ** 2 },
-    ({ add, basicFn, square }, a: number, b: number, c: number) =>
-      square(basicFn.inject(add)(a, b, c))
+  const grandchild = depend({ add }, ({ add }, a: number, b: number) => add(a, b))
+  const child = depend(
+    { grandchild: grandchild.inject() },
+    ({ grandchild }, a: number, b: number, c: number) => grandchild(a, b) * c
+  )
+  const parentFn = depend(
+    { child: child.inject(), print: (data: number) => alert(data) },
+    ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
   )
 
-  const injectedFn = nestedFn.inject({ ...nestedFn.deps, add: (a, b) => a * b })
+  const printInjected = parentFn.inject({ print: data => data })
+  expect(printInjected(2, 3, 4)).toBe((2 + 3) * 4)
 
-  expect(nestedFn(2, 3, 4)).toBe(20 ** 2)
-  expect(injectedFn(2, 3, 4)).toBe(24 ** 2)
+  const childInjected = parentFn.inject({
+    child: child.inject({ grandchild: grandchild.inject({ add: (a, b) => a * b }) }),
+    print: data => data
+  })
+  expect(childInjected(2, 3, 4)).toBe(2 * 3 * 4)
 })
 
 type FS = {
