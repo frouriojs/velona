@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/frouriojs/velona/compare/v0.3.0...v0.4.0) (2020-07-28)
+
+
+### Features
+
+* simplify integration ([39a2d1f](https://github.com/frouriojs/velona/commit/39a2d1f012d7ae4a69787dd42d95a9183cb12600))
+
 ## [0.3.0](https://github.com/frouriojs/velona/compare/v0.2.0...v0.3.0) (2020-07-28)
 
 
