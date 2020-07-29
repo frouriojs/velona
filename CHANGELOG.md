@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/frouriojs/velona/compare/v0.4.0...v0.4.1) (2020-07-29)
+
+
+### Bug Fixes
+
+* rename _velone to _velona ([441e133](https://github.com/frouriojs/velona/commit/441e1332a0f3782d266468bd9984a17f761381d8))
+
 ## [0.4.0](https://github.com/frouriojs/velona/compare/v0.3.0...v0.4.0) (2020-07-28)
 
 
