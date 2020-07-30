@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/frouriojs/velona/compare/v0.4.1...v0.4.2) (2020-07-30)
+
+
+### Bug Fixes
+
+* rename params to args ([7fa8fad](https://github.com/frouriojs/velona/commit/7fa8fad3de2efc108165db4561a0a3980a6dccb5))
+
 ### [0.4.1](https://github.com/frouriojs/velona/compare/v0.4.0...v0.4.1) (2020-07-29)
 
 
