@@ -1,4 +1,4 @@
-type Deps<T extends Record<string, any>> = {
+export type Deps<T extends Record<string, any>> = {
   [P in keyof T]: T[P] extends { _velona: boolean }
     ? (...args: Parameters<T[P]>) => ReturnType<T[P]>
     : T[P]
