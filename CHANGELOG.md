@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/frouriojs/velona/compare/v0.5.0...v0.5.1) (2020-08-01)
+
+
+### Bug Fixes
+
+* type definition ([dab6415](https://github.com/frouriojs/velona/commit/dab6415787d54f9cb5c48641696b99c59c7fa234))
+
 ## [0.5.0](https://github.com/frouriojs/velona/compare/v0.4.2...v0.5.0) (2020-07-31)
 
 
