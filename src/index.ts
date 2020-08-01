@@ -4,7 +4,7 @@ export type Deps<T extends Record<string, any>> = {
     : T[P]
 }
 
-export const depend = <T extends Record<string, any>, U extends [] | [any, ...any[]], V>(
+export const depend = <T extends Record<string, any>, U extends any[], V>(
   dependencies: T,
   cb: (deps: Deps<T>, ...args: U) => V
 ) => {

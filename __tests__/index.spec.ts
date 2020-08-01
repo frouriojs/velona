@@ -1,6 +1,15 @@
 import fs from 'fs'
 import { depend } from '../src'
 
+test('injest option args', () => {
+  const handler = depend({ print: (text?: string) => alert(text) }, ({ print }, a?: string) => {
+    return print(a)
+  })
+
+  expect(handler.inject({ print: text => text })('test')).toBe('test')
+  expect(handler.inject({ print: text => text })()).toBeUndefined()
+})
+
 test('inject add', () => {
   const add = (a: number, b: number) => a + b
   const basicFn = depend({ add }, ({ add }, a: number, b: number, c: number) => add(a, b) * c)
