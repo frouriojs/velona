@@ -245,4 +245,4 @@ expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
 
 ## License
 
-aspida is licensed under a [MIT License](https://github.com/frouriojs/velona/blob/master/LICENSE).
+velona is licensed under a [MIT License](https://github.com/frouriojs/velona/blob/master/LICENSE).
