@@ -1,12 +1,40 @@
-# Velona
+<br />
+<div align="center">
+  <img src="https://frouriojs.github.io/velona/assets/images/ogp.png" width="1280" alt="velona" />
+</div>
 
-> TypeScript DI helper for functional programming
+<div align="center">
+  <a href="https://www.npmjs.com/package/velona">
+    <img src="https://img.shields.io/npm/v/velona" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/velona">
+    <img src="https://img.shields.io/npm/dm/velona" alt="npm download" />
+  </a>
+  <a href="https://github.com/frouriojs/velona/actions?query=workflow%3A%22Node.js+CI%22">
+    <img src="https://github.com/frouriojs/velona/workflows/Node.js%20CI/badge.svg?branch=master" alt="Node.js CI" />
+  </a>
+  <a href="https://codecov.io/gh/frouriojs/velona">
+    <img src="https://img.shields.io/codecov/c/github/frouriojs/velona.svg" alt="Codecov" />
+  </a>
+  <a href="https://lgtm.com/projects/g/frouriojs/velona/context:javascript">
+    <img src="https://img.shields.io/lgtm/grade/javascript/g/frouriojs/velona.svg" alt="Language grade: JavaScript" />
+  </a>
+</div>
 
-[![npm version](https://img.shields.io/npm/v/velona)](https://www.npmjs.com/package/velona)
-[![Node.js CI](https://github.com/frouriojs/velona/workflows/Node.js%20CI/badge.svg?branch=master)](https://github.com/frouriojs/velona/actions?query=workflow%3A%22Node.js+CI%22)
-[![Codecov](https://img.shields.io/codecov/c/github/frouriojs/velona.svg)](https://codecov.io/gh/frouriojs/velona)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/frouriojs/velona.svg)](https://lgtm.com/projects/g/frouriojs/velona/context:javascript)
-[![License](https://img.shields.io/npm/l/velona)](https://github.com/frouriojs/velona/blob/master/LICENSE)
+<p align="center">Velona is TypeScript DI helper for functional programming.</p>
+<br />
+<br />
+<br />
+
+## Table of Contents
+
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [DI to browser API callback](#browser)
+- [Comparison with no DI](#Comparison)
+- [Usage with fs](#fs)
+- [Usage with prisma](#prisma)
+- [Integration test](#integration)
 
 ## Installation
 
@@ -53,6 +81,8 @@ expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
 expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
 ```
 
+<a id="browser"></a>
+
 ## DI to browser API callback
 
 `handler.ts`
@@ -87,6 +117,8 @@ expect(injectedHandler(event)).toBe(
   `type: ${event.type}, x: ${event.x}, y: ${event.y}`
 ) // pass
 ```
+
+<a id="Comparison"></a>
 
 ## Comparison with no DI
 
@@ -134,6 +166,8 @@ expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
 expect(noDIFn(2, 3, 4)).toBe((2 + 3) * 4) // pass
 ```
 
+<a id="fs"></a>
+
 ## Usage with fs
 
 `index.ts`
@@ -179,6 +213,55 @@ const injectedFn = basicFn.inject({
 const text = 'Hello world!'
 await expect(injectedFn('test.txt', text)).resolves.toBe(text)
 ```
+
+<a id="prisma"></a>
+
+## Usage with prisma
+
+`tasks.ts`
+
+```ts
+import { depend } from 'velona'
+import { PrismaClient } from '@prisma/client'
+
+type Task = {
+  id: number
+  label: string
+  done: boolean
+}
+
+const prisma = new PrismaClient()
+
+export const getTasks = depend(
+  { prisma: prisma as { task: { findMany(): Promise<Task[]> } } }, // inject prisma
+  ({ prisma }) => prisma.task.findMany() // prisma is injected object
+)
+```
+
+`tasks.spec.ts`
+
+```ts
+import { getTasks } from '$/service/tasks'
+
+const injectedGetTasks = getTasks.inject({
+  prisma: {
+    task: {
+      findMany: () =>
+        Promise.resolve([
+          { id: 0, label: 'task1', done: false },
+          { id: 1, label: 'task2', done: false },
+          { id: 2, label: 'task3', done: true },
+          { id: 3, label: 'task4', done: true },
+          { id: 4, label: 'task5', done: false }
+        ])
+    }
+  }
+})
+
+await expect(injectedGetTasks()).resolves.toHaveLength(5)
+```
+
+<a id="integration"></a>
 
 ## Integration test
 
@@ -245,4 +328,4 @@ expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4) // pass
 
 ## License
 
-velona is licensed under a [MIT License](https://github.com/frouriojs/velona/blob/master/LICENSE).
+Velona is licensed under a [MIT License](https://github.com/frouriojs/velona/blob/master/LICENSE).
