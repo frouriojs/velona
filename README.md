@@ -1,7 +1,5 @@
 <br />
-<div align="center">
-  <img src="https://frouriojs.github.io/velona/assets/images/ogp.png" width="1280" alt="velona" />
-</div>
+<img src="https://frouriojs.github.io/velona/assets/images/ogp.png" width="1280" alt="velona" />
 
 <div align="center">
   <a href="https://www.npmjs.com/package/velona">
