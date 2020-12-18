@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.2](https://github.com/frouriojs/velona/compare/v0.5.1...v0.5.2) (2020-12-18)
+
+
+### Bug Fixes
+
+* typo (injest => inject) ([5ed4223](https://github.com/frouriojs/velona/commit/5ed4223decb7474cb75e69fd19e1f1fc8eb9ddb8))
+
+
+### Documentation
+
+* fix README ([85347be](https://github.com/frouriojs/velona/commit/85347be864b7f753771017e1feb489a21c680744))
+* update README ([7c4720b](https://github.com/frouriojs/velona/commit/7c4720b7141b2dc9f090d9692b5eb41b6e4e51b3))
+
 ### [0.5.1](https://github.com/frouriojs/velona/compare/v0.5.0...v0.5.1) (2020-08-01)
 
 
