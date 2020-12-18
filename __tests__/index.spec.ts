@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { depend } from '../src'
 
-test('injest option args', () => {
+test('inject option args', () => {
   const handler = depend({ print: (text?: string) => alert(text) }, ({ print }, a?: string) => {
     return print(a)
   })
