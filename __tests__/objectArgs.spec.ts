@@ -6,14 +6,14 @@ test('inject option args', () => {
     return print(a)
   })
 
-  expect(handler.inject(() => ({ print: text => text }))('test')).toBe('test')
-  expect(handler.inject(() => ({ print: text => text }))()).toBeUndefined()
+  expect(handler.inject({ print: text => text })('test')).toBe('test')
+  expect(handler.inject({ print: text => text })()).toBeUndefined()
 })
 
 test('inject add', () => {
   const add = (a: number, b: number) => a + b
   const basicFn = depend({ add }, ({ add }, a: number, b: number, c: number) => add(a, b) * c)
-  const injectedFn = basicFn.inject(() => ({ add: (a, b) => a * b }))
+  const injectedFn = basicFn.inject({ add: (a, b) => a * b })
 
   expect(injectedFn(2, 3, 4)).toBe(2 * 3 * 4)
   expect(basicFn(2, 3, 4)).toBe((2 + 3) * 4)
@@ -28,7 +28,7 @@ test('Browser API mocking', () => {
 
   const event = { type: 'click', x: 1, y: 2 }
   expect(() => handler(event)).toThrow()
-  expect(handler.inject(() => ({ print: text => text }))(event)).toBe(
+  expect(handler.inject({ print: text => text })(event)).toBe(
     `type: ${event.type}, x: ${event.x}, y: ${event.y}`
   )
 })
@@ -45,12 +45,10 @@ test('integration', () => {
     ({ child, print }, a: number, b: number, c: number) => print(child(a, b, c))
   )
 
-  const childInjected = parentFn.inject(deps => ({
-    child: deps.child.inject(childDeps => ({
-      grandchild: childDeps.grandchild.inject({ add: (a, b) => a * b })
-    })),
+  const childInjected = parentFn.inject({
+    child: child.inject({ grandchild: grandchild.inject({ add: (a, b) => a * b }) }),
     print: data => data
-  }))
+  })
   expect(childInjected(2, 3, 4)).toBe(2 * 3 * 4)
 })
 
@@ -66,13 +64,13 @@ test('inject fs', async () => {
   })
 
   const data: Record<string, string> = {}
-  const injectedFn = basicFn.inject(() => ({
+  const injectedFn = basicFn.inject({
     readFile: path => Promise.resolve(data[path]),
     writeFile: (path, text) => {
       data[path] = text
       return Promise.resolve()
     }
-  }))
+  })
 
   const text = 'Hello world!'
   await expect(injectedFn('test.txt', text)).resolves.toBe(text)

@@ -312,12 +312,12 @@ parentFn(2, 3, 4) // alert(20)
 ```ts
 import { parentFn } from './parentFn'
 
-const injectedFn = parentFn.inject({
-  child: child.inject({
-    grandchild: grandchild.inject({
+const injectedFn = parentFn.inject((parentDeps) => ({
+  child: parentDeps.child.inject((childDeps) => ({
+    grandchild: clildDeps.grandchild.inject({
       add: (a, b) => a * b
-    })
-  }),
+    }))
+  })),
   print: data => data
 })
 
