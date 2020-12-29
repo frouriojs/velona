@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/frouriojs/velona/compare/v0.6.0...v0.7.0) (2020-12-29)
+
+
+### Features
+
+* define Injectable type ([c895416](https://github.com/frouriojs/velona/commit/c895416602743dcbf85fd71287b223433b29e42d))
+
 ## [0.6.0](https://github.com/frouriojs/velona/compare/v0.5.2...v0.6.0) (2020-12-29)
 
 

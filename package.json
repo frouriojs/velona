@@ -1,6 +1,6 @@
 {
   "name": "velona",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "TypeScript DI helper for functional programming",
   "author": "Solufa <solufa2020@gmail.com>",
   "license": "MIT",
