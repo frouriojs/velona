@@ -2,18 +2,13 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": true,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "dist",
     "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "target": "es5",
-    "types": ["@types/node", "@types/jest"]
+    "target": "es2018"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "__tests__/**/*"]
 }
